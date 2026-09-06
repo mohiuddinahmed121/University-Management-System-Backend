@@ -1,0 +1,18 @@
+model Program {
+  id            String  @id @default(uuid())
+  name          String
+  code          String  @unique
+  description   String?
+  durationYears Int
+
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+
+  students Student[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([departmentId])
+  @@map("programs")
+}

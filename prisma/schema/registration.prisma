@@ -1,0 +1,21 @@
+model Registration {
+  id String @id @default(uuid())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  sectionId String
+  section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  status       RegistrationStatus @default(REGISTERED)
+  registeredAt DateTime           @default(now())
+  droppedAt    DateTime?
+
+  result Result?
+
+  @@unique([studentId, sectionId])
+  @@index([studentId])
+  @@index([sectionId])
+  @@index([status])
+  @@map("registrations")
+}

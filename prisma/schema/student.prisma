@@ -1,0 +1,28 @@
+model Student {
+  id String @id @default(uuid())
+
+  studentId String @unique
+  name      String
+  email     String @unique
+
+  contactNumber String?
+  address       String?
+  dateOfBirth   DateTime?
+  gender        Gender?
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  programId String
+  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  registrations Registration[]
+  payments      Payment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email], name: "idx_student_email")
+  @@index([programId], name: "idx_student_program")
+  @@map("students")
+}

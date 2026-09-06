@@ -1,0 +1,16 @@
+model Result {
+  id String @id @default(uuid())
+
+  registrationId String       @unique
+  registration   Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+
+  marks      Decimal? @db.Decimal(5, 2)
+  grade      String?
+  gradePoint Decimal? @db.Decimal(3, 2)
+
+  submittedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@index([grade])
+  @@map("results")
+}
