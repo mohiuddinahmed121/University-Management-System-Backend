@@ -30,6 +30,7 @@ export default {
    instructor_name: process.env.INSTRUCTOR_NAME!,
    instructor_email: process.env.INSTRUCTOR_EMAIL!,
    instructor_password: process.env.INSTRUCTOR_PASSWORD!,
+   default_department_id: process.env.DEFAULT_DEPARTMENT_ID!,
 
    student_name: process.env.STUDENT_NAME!,
    student_email: process.env.STUDENT_EMAIL!,

@@ -11,6 +11,43 @@ import type {
 } from "./instructor.interface";
 import { IQuery } from "../../interface";
 
+// const applyAsInstructor = async (payload: IApplyAsInstructorPayload) => {
+//    const isUserExists = await prisma.user.findUnique({
+//       where: {
+//          email: payload.user.email,
+//       },
+//    });
+
+//    if (isUserExists) {
+//       throw new AppError(httpStatus.CONFLICT, "User Already Exists With This Email");
+//    }
+
+//    const instructorApplication = await prisma.user.create({
+//       data: {
+//          name: payload.user.name,
+//          email: payload.user.email,
+//          role: "INSTRUCTOR",
+//          needPasswordChange: true,
+//          instructor: {
+//             create: {
+//                name: payload.user.name,
+//                email: payload.user.email,
+//                address: payload.instructor.address,
+//                specialization: payload.instructor.specialization,
+//                designation: payload.instructor.designation,
+//                contactNumber: payload.instructor.contactNumber,
+//                departmentId: config.default_department_id,
+//             },
+//          },
+//       },
+//       include: {
+//          instructor: true,
+//       },
+//    });
+
+//    return instructorApplication;
+// };
+
 const applyAsInstructor = async (payload: IApplyAsInstructorPayload) => {
    const isUserExists = await prisma.user.findUnique({
       where: {
@@ -22,27 +59,55 @@ const applyAsInstructor = async (payload: IApplyAsInstructorPayload) => {
       throw new AppError(httpStatus.CONFLICT, "User Already Exists With This Email");
    }
 
-   const instructorApplication = await prisma.user.create({
-      data: {
-         name: payload.user.name,
-         email: payload.user.email,
-         role: "INSTRUCTOR",
-         needPasswordChange: true,
-         instructor: {
-            create: {
-               name: payload.user.name,
-               email: payload.user.email,
-               address: payload.instructor.address,
-               specialization: payload.instructor.specialization,
-               designation: payload.instructor.designation,
-               contactNumber: payload.instructor.contactNumber,
-               departmentId: config.default_department_id,
+   const instructorApplication = await prisma.$transaction(async (tx) => {
+      // transaction-এর ভিতরেই instructorId generate করা হচ্ছে
+      const currentYear = new Date().getFullYear();
+      const prefix = `INS-${currentYear}`;
+
+      const lastInstructor = await tx.instructor.findFirst({
+         where: {
+            instructorId: {
+               startsWith: prefix,
             },
          },
-      },
-      include: {
-         instructor: true,
-      },
+         orderBy: {
+            createdAt: "desc",
+         },
+      });
+
+      let sequence = 1;
+      if (lastInstructor) {
+         const lastSequenceStr = lastInstructor.instructorId.split("-").pop();
+         sequence = parseInt(lastSequenceStr || "0") + 1;
+      }
+
+      const instructorId = `${prefix}-${String(sequence).padStart(4, "0")}`;
+
+      const result = await tx.user.create({
+         data: {
+            name: payload.user.name,
+            email: payload.user.email,
+            role: "INSTRUCTOR",
+            needPasswordChange: true,
+            instructor: {
+               create: {
+                  instructorId,
+                  name: payload.user.name,
+                  email: payload.user.email,
+                  address: payload.instructor.address,
+                  specialization: payload.instructor.specialization,
+                  designation: payload.instructor.designation,
+                  contactNumber: payload.instructor.contactNumber,
+                  departmentId: config.default_department_id,
+               },
+            },
+         },
+         include: {
+            instructor: true,
+         },
+      });
+
+      return result;
    });
 
    return instructorApplication;
