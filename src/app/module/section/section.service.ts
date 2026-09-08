@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
-import { RegistrationStatus, SectionStatus } from "../../../generated/prisma/enums";
-import type { SectionWhereInput } from "../../../generated/prisma/models";
+import { RegistrationStatus, SectionStatus } from "../../../../generated/prisma/enums";
+import type { SectionWhereInput } from "../../../../generated/prisma/models";
 import type { IQuery } from "../../interface";
 import { prisma } from "../../lib/prisma";
 import type { RequestUser } from "../../middleware/checkAuth";

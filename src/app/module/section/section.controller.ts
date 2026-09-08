@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
-import { SectionServices } from "./section.service";
+import { SectionServices } from "../../module/section/section.service";
 
 const createSection = catchAsync(async (req: Request, res: Response) => {
    const payload = req.body;
