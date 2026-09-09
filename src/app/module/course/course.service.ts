@@ -1,5 +1,5 @@
 import httpStatus from "http-status";
-import type { CourseWhereInput } from "../../../generated/prisma/models";
+import type { CourseWhereInput } from "../../../../generated/prisma/models";
 import type { IQuery } from "../../interface";
 import { prisma } from "../../lib/prisma";
 import type { RequestUser } from "../../middleware/checkAuth";

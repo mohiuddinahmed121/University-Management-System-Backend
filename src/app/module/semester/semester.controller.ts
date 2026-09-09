@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
-import { SemesterServices } from "./semester.service";
+import { SemesterServices } from "../semester/semester.service";
 
 const createSemester = catchAsync(async (req: Request, res: Response) => {
    const payload = req.body;

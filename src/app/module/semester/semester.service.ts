@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
-import type { SemesterWhereInput } from "../../../generated/prisma/models";
-import { SemesterStatus } from "../../../generated/prisma/enums";
+import type { SemesterWhereInput } from "../../../../generated/prisma/models";
+import { SemesterStatus } from "../../../../generated/prisma/enums";
 import type { IQuery } from "../../interface";
 import { prisma } from "../../lib/prisma";
 import type { RequestUser } from "../../middleware/checkAuth";
