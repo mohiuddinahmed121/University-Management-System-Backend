@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { Role } from "../../../generated/prisma/enums";
+import { Role } from "../../../../generated/prisma/enums";
 import { auth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
-import { DepartmentController } from "./department.controller";
+import { DepartmentController } from "../department/department.controller";
 import {
    CreateDepartmentValidationZodSchema,
    UpdateDepartmentValidationZodSchema,
