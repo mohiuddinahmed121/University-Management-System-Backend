@@ -10,13 +10,13 @@ import { UserRoutes } from "./app/module/user/user.route";
 import { StudentRoutes } from "../src/app/module/student/student.route";
 import { InstructorRoutes } from "../src/app/module/instructor/instructor.route";
 import { DepartmentRoutes } from "./app/module/department/department.route";
-//import { ProgramRoutes } from "./app/module/program/program.route";
+import { ProgramRoutes } from "./app/module/program/program.route";
 import { CourseRoutes } from "../src/app/module/course/course.route";
 import { SemesterRoutes } from "../src/app/module/semester/semester.route";
 import { SectionRoutes } from "../src/app/module/section/section.route";
 import { RegistrationRoutes } from "../src/app/module/registration/registration.route";
-//import { ResultRoutes } from "./app/module/result/result.route";
-//import { PaymentRoutes } from "./app/module/payment/payment.route";
+import { ResultRoutes } from "./app/module/result/result.route";
+import { PaymentRoutes } from "./app/module/payment/payment.route";
 
 const app: Application = express();
 
@@ -39,13 +39,13 @@ app.use("/api/v1/user", UserRoutes);
 app.use("/api/v1/student", StudentRoutes);
 app.use("/api/v1/instructor", InstructorRoutes);
 app.use("/api/v1/department", DepartmentRoutes);
-//app.use("/api/v1/program", ProgramRoutes);
+app.use("/api/v1/program", ProgramRoutes);
 app.use("/api/v1/course", CourseRoutes);
 app.use("/api/v1/semester", SemesterRoutes);
 app.use("/api/v1/section", SectionRoutes);
 app.use("/api/v1/registration", RegistrationRoutes);
-//app.use("/api/v1/result", ResultRoutes);
-//app.use("/api/v1/payment", PaymentRoutes);
+app.use("/api/v1/result", ResultRoutes);
+app.use("/api/v1/payment", PaymentRoutes);
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {
