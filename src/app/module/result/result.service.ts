@@ -2,11 +2,8 @@ import httpStatus from "http-status";
 import type { IQuery } from "../../interface";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
-import type {
-   IRequestUser,
-   ISubmitResultPayload,
-   IUpdateResultPayload,
-} from "../auth/auth.interface";
+import type { IRequestUser } from "../auth/auth.interface";
+import type { ISubmitResultPayload, IUpdateResultPayload } from "../result/result.interface";
 
 const getGrade = (marks: number) => {
    if (marks >= 80) return { grade: "A+", gradePoint: 4.0 };

@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { auth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
-import { ResultController } from "./result.controller";
+import { ResultController } from "../result/result.controller";
 import {
    SubmitResultValidationZodSchema,
    UpdateResultValidationZodSchema,
-} from "./result.validation";
+} from "../result/result.validation";
 
 const router = Router();
 
