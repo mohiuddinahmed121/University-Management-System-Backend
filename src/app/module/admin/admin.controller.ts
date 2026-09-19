@@ -4,17 +4,6 @@ import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { AdminServices } from "./admin.service";
 
-// const createInstructor = catchAsync(async (req: Request, res: Response) => {
-//    const result = await AdminServices.createInstructor(req.body);
-
-//    sendResponse(res, {
-//       statusCode: httpStatus.CREATED,
-//       success: true,
-//       message: "Instructor Created Successfully",
-//       data: result,
-//    });
-// });
-
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
    const { data, meta } = await AdminServices.getAllUsers(req.query);
 
@@ -55,7 +44,6 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const AdminController = {
-   //createInstructor,
    getAllUsers,
    updateUserStatus,
    getSingleUser,

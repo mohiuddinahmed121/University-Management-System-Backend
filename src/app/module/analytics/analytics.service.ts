@@ -4,8 +4,6 @@ import { prisma } from "../../lib/prisma";
 import { RequestUser } from "../../middleware/checkAuth";
 import { AppError } from "../../utils/AppError";
 
-/* Admin Analytics */
-
 const getAdminAnalytics = async () => {
    const totalStudents = await prisma.student.count();
 
@@ -82,8 +80,6 @@ const getAdminAnalytics = async () => {
       totalRevenue,
    };
 };
-
-/* Student Analytics */
 
 const getStudentAnalytics = async (user: RequestUser) => {
    const student = await prisma.student.findUnique({
@@ -196,8 +192,6 @@ const getStudentAnalytics = async (user: RequestUser) => {
       pendingSemesterFee,
    };
 };
-
-/* Instructor Analytics */
 
 const getInstructorAnalytics = async (user: RequestUser) => {
    const instructor = await prisma.instructor.findUnique({

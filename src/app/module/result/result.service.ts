@@ -19,12 +19,6 @@ const getGrade = (marks: number) => {
    return { grade: "F", gradePoint: 0.0 };
 };
 
-/*
- * Helper: JWT payload-এ থাকা user.userId আসলে User.id।
- * কিন্তু Section.instructorId আসলে Instructor.id।
- * তাই instructor role হলে, প্রথমে User.id দিয়ে
- * সংশ্লিষ্ট Instructor.id বের করে নিতে হবে।
- */
 const getInstructorIdFromUser = async (userId: string) => {
    const instructor = await prisma.instructor.findUnique({
       where: {

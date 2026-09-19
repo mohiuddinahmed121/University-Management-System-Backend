@@ -24,10 +24,6 @@ import type {
    IVerifyEmailPayload,
 } from "./auth.interface";
 
-/* =========================
-   Register Student
-========================= */
-
 const registerStudent = async (payload: IRegisterStudentPayload) => {
    const { name, password, student: studentData } = payload;
 
@@ -92,10 +88,6 @@ const registerStudent = async (payload: IRegisterStudentPayload) => {
       html,
    });
 };
-
-/* =========================
-   Verify Student Email
-========================= */
 
 const verifyStudentEmail = async (payload: IVerifyEmailPayload) => {
    const otp = payload.otp;
@@ -222,10 +214,6 @@ const verifyStudentEmail = async (payload: IVerifyEmailPayload) => {
    };
 };
 
-/* =========================
-   Login
-========================= */
-
 const loginUser = async (payload: ILoginUserPayload) => {
    const { password } = payload;
 
@@ -312,10 +300,6 @@ const loginUser = async (payload: ILoginUserPayload) => {
    };
 };
 
-/* =========================
-   Get Me
-========================= */
-
 const getMe = async (user: IRequestUser) => {
    const isUserExists = await prisma.user.findUnique({
       where: {
@@ -336,10 +320,6 @@ const getMe = async (user: IRequestUser) => {
 
    return isUserExists;
 };
-
-/* =========================
-   Refresh Token
-========================= */
 
 const refreshToken = async (token: string) => {
    const verifiedRefreshToken = jwtUtils.verifyToken(token, config.jwt_refresh_secret);
@@ -387,10 +367,6 @@ const refreshToken = async (token: string) => {
       refreshToken,
    };
 };
-
-/* =========================
-   Google Login
-========================= */
 
 const googleLogin = async (payload: IGoogleLoginPayload) => {
    let googleIdTokenPayload: TokenPayload | null | undefined = null;
@@ -537,10 +513,6 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
    };
 };
 
-/* =========================
-   Forgot Password
-========================= */
-
 const forgotPassword = async (payload: IForgotPasswordPayload) => {
    const email = payload.email.trim().toLowerCase();
 
@@ -600,10 +572,6 @@ const forgotPassword = async (payload: IForgotPasswordPayload) => {
       html,
    });
 };
-
-/* =========================
-   Reset Password
-========================= */
 
 const resetPassword = async (payload: IResetPasswordPayload) => {
    const email = payload.email.trim().toLowerCase();

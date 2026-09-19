@@ -7,9 +7,7 @@ import { IQuery } from "../../interface";
 import { prisma } from "../../lib/prisma";
 import { RequestUser } from "../../middleware/checkAuth";
 import { AppError } from "../../utils/AppError";
-import { generateInstructorId } from "../../utils/generateId";
 
-// const createInstructor = async (payload: {
 //    name: string;
 //    email: string;
 //    password: string;
@@ -290,7 +288,6 @@ const getSingleUser = async (userId: string) => {
 };
 
 export const AdminServices = {
-   //createInstructor,
    getAllUsers,
    updateUserStatus,
    getSingleUser,

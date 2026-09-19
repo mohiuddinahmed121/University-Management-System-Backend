@@ -29,10 +29,8 @@ app.use(
    }),
 );
 
-// Enable URL-encoded form data parsing
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware to parse JSON bodies
 app.use(express.json());
 app.use(cookieParser());
 
@@ -51,7 +49,6 @@ app.use("/api/v1/payment", PaymentRoutes);
 app.use("/api/v1/admin", AdminRoutes);
 app.use("/api/v1/analytics", AnalyticsRoutes);
 
-// Basic route
 app.get("/", async (req: Request, res: Response) => {
    res.status(httpStatus.OK).json({
       success: true,
