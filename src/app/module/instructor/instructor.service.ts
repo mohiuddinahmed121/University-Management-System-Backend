@@ -274,6 +274,30 @@ const verifyInstructorEmail = async (email: string, otp: string) => {
    };
 };
 
+const generateTemporaryPassword = (): string => {
+   const lowercase = "abcdefghijklmnopqrstuvwxyz";
+   const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+   const numbers = "0123456789";
+   const specialChars = "!@#$%^&*";
+
+   const allChars = lowercase + uppercase + numbers + specialChars;
+
+   let password = "";
+   password += lowercase[Math.floor(Math.random() * lowercase.length)];
+   password += uppercase[Math.floor(Math.random() * uppercase.length)];
+   password += numbers[Math.floor(Math.random() * numbers.length)];
+   password += specialChars[Math.floor(Math.random() * specialChars.length)];
+
+   for (let i = password.length; i < 12; i++) {
+      password += allChars[Math.floor(Math.random() * allChars.length)];
+   }
+
+   return password
+      .split("")
+      .sort(() => Math.random() - 0.5)
+      .join("");
+};
+
 const approveInstructor = async (payload: IApproveInstructorPayload, reviewer: RequestUser) => {
    const { instructorId, action, rejectionReason } = payload;
 
@@ -310,6 +334,13 @@ const approveInstructor = async (payload: IApproveInstructorPayload, reviewer: R
       throw new AppError(httpStatus.BAD_REQUEST, "Rejection reason is required");
    }
 
+   // নতুন temporary password শুধু APPROVE হলে generate হবে
+   let newTemporaryPassword: string | null = null;
+
+   if (action === "APPROVE") {
+      newTemporaryPassword = generateTemporaryPassword(); // ✅ বদলানো হলো
+   }
+
    const updatedInstructor = await prisma.$transaction(async (tx) => {
       const updated = await tx.instructor.update({
          where: {
@@ -329,16 +360,32 @@ const approveInstructor = async (payload: IApproveInstructorPayload, reviewer: R
          },
       });
 
-      await tx.user.update({
-         where: {
-            id: instructor.userId,
-         },
-         data: {
-            status: action === "APPROVE" ? UserStatus.ACTIVE : UserStatus.BLOCKED,
+      if (action === "APPROVE") {
+         const hashedPassword = await bcrypt.hash(
+            newTemporaryPassword as string,
+            Number(config.bcrypt_salt_rounds),
+         );
 
-            needPasswordChange: action === "APPROVE",
-         },
-      });
+         await tx.user.update({
+            where: {
+               id: instructor.userId,
+            },
+            data: {
+               status: UserStatus.ACTIVE,
+               needPasswordChange: true,
+               password: hashedPassword, // নতুন password বসানো হলো
+            },
+         });
+      } else {
+         await tx.user.update({
+            where: {
+               id: instructor.userId,
+            },
+            data: {
+               status: UserStatus.BLOCKED,
+            },
+         });
+      }
 
       return updated;
    });
@@ -355,8 +402,10 @@ const approveInstructor = async (payload: IApproveInstructorPayload, reviewer: R
 					Your instructor application has been approved.
 				</p>
 				<p>
-					You can now log in using your registered email
-					and temporary password.
+					<strong>Email:</strong> ${instructor.email}
+				</p>
+				<p>
+					<strong>Temporary Password:</strong> ${newTemporaryPassword}
 				</p>
 				<p>
 					Please change your password after your first login.
@@ -381,15 +430,6 @@ const approveInstructor = async (payload: IApproveInstructorPayload, reviewer: R
       });
    }
 
-   // return {
-   //    id: updatedInstructor.id,
-   //    instructorId: updatedInstructor.instructorId,
-   //    name: updatedInstructor.name,
-   //    email: updatedInstructor.email,
-   //    verificationStatus: action === "APPROVE" ? "APPROVED" : "REJECTED",
-   //    rejectionReason: action === "REJECT" ? rejectionReason : null,
-   //    reviewedBy: reviewer.userId,
-   // };
    return {
       id: updatedInstructor.id,
       instructorId: updatedInstructor.instructorId,
