@@ -18,7 +18,7 @@ http://localhost:5000/api/v1
 
 ## Project Flow
 
-The system is designed around three roles:
+The system is designed around three roles: Admin, Instructor, and Student.
 
 ### Admin
 
@@ -53,7 +53,6 @@ The system is designed around three roles:
 
 ## Instructor Application Flow
 
-```text
 Instructor Application
         ↓
 Resume Upload
@@ -67,7 +66,9 @@ Approved
 Instructor Login
         ↓
 Manage Courses & Results
-Course Registration Flow
+
+## Course Registration Flow
+
 Student Login
       ↓
 Browse Available Courses
@@ -81,7 +82,9 @@ Enrollment Confirmation
 Instructor Submits Result
       ↓
 Student Views Result
-Payment Flow
+
+## Payment Flow
+
 Student
    ↓
 Select Semester
@@ -95,54 +98,76 @@ Payment Verification
 Payment Completed
    ↓
 Payment History
-Key Features
-JWT-based authentication
-Role-based access control (RBAC)
-Email OTP verification
-Google authentication
-Password reset with OTP
-Student registration and profile management
-Instructor application and admin approval
-Instructor resume upload
-Cloudinary file/image storage
-Department and program management
-Course and prerequisite management
-Semester management
-Section management
-Course registration and drop
-Student result management
-Academic transcript generation
-Semester fee payment
-bKash payment integration
-Pagination, filtering, sorting, and searching
-Input validation using Zod
-PostgreSQL database with Prisma ORM
-Redis for OTP-related operations
-Secure password hashing
-Structured API responses
-Error handling middleware
-Protected routes with RBAC
-Technologies
-Node.js
-TypeScript
-Express.js
-PostgreSQL
-Prisma ORM
-JWT
-Zod
-Redis
-Nodemailer
-Google Authentication
-Cloudinary
-Multer
-bKash Payment Gateway
-PDFKit
-Vercel
-API Version
+
+## Key Features
+
+- JWT-based authentication
+- Role-based access control (RBAC)
+- Email OTP verification
+- Google authentication
+- Password reset with OTP
+- Student registration and profile management
+- Instructor application and admin approval
+- Instructor resume upload
+- Cloudinary file/image storage
+- Department and program management
+- Course and prerequisite management
+- Semester management
+- Section management
+- Course registration and drop
+- Student result management
+- Academic transcript generation
+- Semester fee payment
+- bKash payment integration
+- Pagination, filtering, sorting, and searching
+- Input validation using Zod
+- PostgreSQL database with Prisma ORM
+- Redis for OTP-related operations
+- Secure password hashing
+- Structured API responses
+- Error handling middleware
+- Protected routes with RBAC
+
+## Technologies
+
+- Node.js
+- TypeScript
+- Express.js
+- PostgreSQL
+- Prisma ORM
+- JWT
+- Zod
+- Redis
+- Nodemailer
+- Google Authentication
+- Cloudinary
+- Multer
+- bKash Payment Gateway
+- PDFKit
+- Vercel
+
+## API Version
+
 /api/v1
 
-The API is organized into separate modules for authentication, users, students, instructors, departments, programs, courses, semesters, sections, registrations, results, payments, and analytics.
+## Project Structure
 
-Project Purpose
+The API is organized into separate modules for:
+
+- Authentication
+- Users
+- Students
+- Instructors
+- Departments
+- Programs
+- Courses
+- Semesters
+- Sections
+- Registrations
+- Results
+- Payments
+- Analytics
+
+## Project Purpose
 
 The main goal of this project is to provide a structured backend solution for university academic management while implementing authentication, authorization, course management, student registration, result management, file upload, payment processing, and other real-world backend concepts.
