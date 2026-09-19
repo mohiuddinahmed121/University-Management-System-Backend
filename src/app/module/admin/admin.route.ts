@@ -10,12 +10,12 @@ import {
 
 const router = Router();
 
-router.post(
-   "/create-instructor",
-   auth(Role.ADMIN),
-   validateRequest(CreateInstructorValidationZodSchema),
-   AdminController.createInstructor,
-);
+// router.post(
+//    "/create-instructor",
+//    auth(Role.ADMIN),
+//    validateRequest(CreateInstructorValidationZodSchema),
+//    AdminController.createInstructor,
+// );
 
 router.get("/users", auth(Role.ADMIN), AdminController.getAllUsers);
 

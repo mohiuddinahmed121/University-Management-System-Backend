@@ -74,7 +74,7 @@ const registerStudent = async (payload: IRegisterStudentPayload) => {
       },
    });
 
-   const templatePath = path.join(process.cwd(), "src/app/templates/registration-user-otp.ejs");
+   const templatePath = path.join(process.cwd(), "src/app/templates/verifyEmail.ejs");
 
    const templateData = {
       name,
@@ -178,7 +178,7 @@ const verifyStudentEmail = async (payload: IVerifyEmailPayload) => {
 
    await redisClient.del(studentRegistrationKey);
 
-   const templatePath = path.join(process.cwd(), "src/app/templates/student-welcome-email.ejs");
+   const templatePath = path.join(process.cwd(), "src/app/templates/welcome.ejs");
 
    const templateData = {
       name: createdUser.name,
@@ -235,6 +235,9 @@ const loginUser = async (payload: ILoginUserPayload) => {
       where: {
          email,
       },
+      include: {
+         instructor: true,
+      },
    });
 
    if (!user) {
@@ -251,6 +254,24 @@ const loginUser = async (payload: ILoginUserPayload) => {
 
    if (!user.emailVerified) {
       throw new AppError(httpStatus.FORBIDDEN, "Email Not Verified");
+   }
+
+   // Instructor-specific check: শুধু APPROVED instructor-ই login করতে পারবে
+   if (user.role === Role.INSTRUCTOR) {
+      if (!user.instructor) {
+         throw new AppError(httpStatus.NOT_FOUND, "Instructor Profile Not Found");
+      }
+
+      if (user.instructor.verificationStatus === "PENDING") {
+         throw new AppError(
+            httpStatus.FORBIDDEN,
+            "Your Instructor Application Is Still Under Review",
+         );
+      }
+
+      if (user.instructor.verificationStatus === "REJECTED") {
+         throw new AppError(httpStatus.FORBIDDEN, "Your Instructor Application Has Been Rejected");
+      }
    }
 
    if (user.password === null && user.googleId !== null) {
@@ -462,10 +483,7 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
             },
          });
 
-         const templatePath = path.join(
-            process.cwd(),
-            "src/app/templates/student-welcome-email.ejs",
-         );
+         const templatePath = path.join(process.cwd(), "src/app/templates/welcome.ejs");
 
          const templateData = {
             name: user.name,
@@ -565,7 +583,7 @@ const forgotPassword = async (payload: IForgotPasswordPayload) => {
       },
    });
 
-   const templatePath = path.join(process.cwd(), "src/app/templates/forgot-password.ejs");
+   const templatePath = path.join(process.cwd(), "src/app/templates/resetPassword.ejs");
 
    const templateData = {
       name: isUserExist.name,
@@ -644,7 +662,7 @@ const resetPassword = async (payload: IResetPasswordPayload) => {
 
    await redisClient.del([key]);
 
-   const templatePath = path.join(process.cwd(), "src/app/templates/reset-password-success.ejs");
+   const templatePath = path.join(process.cwd(), "src/app/templates/passwordResetSuccessful.ejs");
 
    const templateData = {
       name: isUserExist.name,

@@ -1,7 +1,17 @@
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import ejs from "ejs";
 import httpStatus from "http-status";
+
+import { Role, UserStatus } from "../../../../generated/prisma/enums";
 import { InstructorWhereInput } from "../../../../generated/prisma/models";
-import config from "../../config";
+
+import { cloudinary } from "../../lib/cloudinary";
 import { prisma } from "../../lib/prisma";
+import { redisClient } from "../../lib/redis";
+import { transporter } from "../../lib/nodemailer";
+
+import config from "../../config";
 import { RequestUser } from "../../middleware/checkAuth";
 import { AppError } from "../../utils/AppError";
 import type {
@@ -11,94 +21,131 @@ import type {
 } from "./instructor.interface";
 import { IQuery } from "../../interface";
 
-// const applyAsInstructor = async (payload: IApplyAsInstructorPayload) => {
-//    const isUserExists = await prisma.user.findUnique({
-//       where: {
-//          email: payload.user.email,
-//       },
-//    });
+const applyAsInstructor = async (
+   payload: IApplyAsInstructorPayload,
+   resume: Express.Multer.File,
+) => {
+   const { user, instructor } = payload;
 
-//    if (isUserExists) {
-//       throw new AppError(httpStatus.CONFLICT, "User Already Exists With This Email");
-//    }
+   // Resume is required
+   if (!resume) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Resume file is required");
+   }
 
-//    const instructorApplication = await prisma.user.create({
-//       data: {
-//          name: payload.user.name,
-//          email: payload.user.email,
-//          role: "INSTRUCTOR",
-//          needPasswordChange: true,
-//          instructor: {
-//             create: {
-//                name: payload.user.name,
-//                email: payload.user.email,
-//                address: payload.instructor.address,
-//                specialization: payload.instructor.specialization,
-//                designation: payload.instructor.designation,
-//                contactNumber: payload.instructor.contactNumber,
-//                departmentId: config.default_department_id,
-//             },
-//          },
-//       },
-//       include: {
-//          instructor: true,
-//       },
-//    });
+   const email = user.email.toLowerCase().trim();
 
-//    return instructorApplication;
-// };
-
-const applyAsInstructor = async (payload: IApplyAsInstructorPayload) => {
-   const isUserExists = await prisma.user.findUnique({
+   // Check existing user
+   const existingUser = await prisma.user.findUnique({
       where: {
-         email: payload.user.email,
+         email,
       },
    });
 
-   if (isUserExists) {
-      throw new AppError(httpStatus.CONFLICT, "User Already Exists With This Email");
+   if (existingUser) {
+      throw new AppError(httpStatus.CONFLICT, "User already exists with this email");
    }
 
-   const instructorApplication = await prisma.$transaction(async (tx) => {
-      // transaction-এর ভিতরেই instructorId generate করা হচ্ছে
-      const currentYear = new Date().getFullYear();
-      const prefix = `INS-${currentYear}`;
+   // Check department
+   const department = await prisma.department.findUnique({
+      where: {
+         id: instructor.departmentId,
+      },
+   });
 
-      const lastInstructor = await tx.instructor.findFirst({
-         where: {
-            instructorId: {
-               startsWith: prefix,
-            },
-         },
-         orderBy: {
-            createdAt: "desc",
-         },
-      });
+   if (!department || department.isDeleted) {
+      throw new AppError(httpStatus.NOT_FOUND, "Department not found");
+   }
 
-      let sequence = 1;
-      if (lastInstructor) {
-         const lastSequenceStr = lastInstructor.instructorId.split("-").pop();
-         sequence = parseInt(lastSequenceStr || "0") + 1;
+   // Generate instructor ID
+   const year = new Date().getFullYear();
+
+   const lastInstructor = await prisma.instructor.findFirst({
+      where: {
+         instructorId: {
+            startsWith: `INS-${year}-`,
+         },
+      },
+      orderBy: {
+         instructorId: "desc",
+      },
+   });
+
+   let sequence = 1;
+
+   if (lastInstructor) {
+      const lastSequence = Number(lastInstructor.instructorId.split("-")[2]);
+
+      if (!Number.isNaN(lastSequence)) {
+         sequence = lastSequence + 1;
       }
+   }
 
-      const instructorId = `${prefix}-${String(sequence).padStart(4, "0")}`;
+   const instructorId = `INS-${year}-${String(sequence).padStart(4, "0")}`;
 
-      const result = await tx.user.create({
+   // Generate temporary password
+   const temporaryPassword = crypto.randomBytes(8).toString("hex");
+
+   const hashedPassword = await bcrypt.hash(temporaryPassword, Number(config.bcrypt_salt_rounds));
+
+   // Upload resume to Cloudinary
+   const resumeUpload = await new Promise<{
+      secure_url: string;
+      public_id: string;
+   }>((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+         {
+            folder: "university/instructor-resumes",
+            resource_type: "auto",
+         },
+         (error, result) => {
+            if (error || !result) {
+               return reject(
+                  new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to upload resume"),
+               );
+            }
+
+            resolve({
+               secure_url: result.secure_url,
+               public_id: result.public_id,
+            });
+         },
+      );
+
+      uploadStream.end(resume.buffer);
+   });
+
+   // Create instructor application
+   const instructorApplication = await prisma.$transaction(async (tx) => {
+      const createdUser = await tx.user.create({
          data: {
-            name: payload.user.name,
-            email: payload.user.email,
-            role: "INSTRUCTOR",
+            name: user.name,
+            email,
+            password: hashedPassword,
+
+            role: Role.INSTRUCTOR,
+            status: UserStatus.ACTIVE,
+
+            authProvider: "CREDENTIAL",
+            emailVerified: false,
             needPasswordChange: true,
+
             instructor: {
                create: {
                   instructorId,
-                  name: payload.user.name,
-                  email: payload.user.email,
-                  address: payload.instructor.address,
-                  specialization: payload.instructor.specialization,
-                  designation: payload.instructor.designation,
-                  contactNumber: payload.instructor.contactNumber,
-                  departmentId: config.default_department_id,
+                  name: user.name,
+                  email,
+
+                  address: instructor.address,
+                  specialization: instructor.specialization,
+                  designation: instructor.designation,
+                  contactNumber: instructor.contactNumber,
+
+                  departmentId: instructor.departmentId,
+
+                  resumeUrl: resumeUpload.secure_url,
+                  resumePublicId: resumeUpload.public_id,
+
+                  verificationStatus: "PENDING",
                },
             },
          },
@@ -107,95 +154,287 @@ const applyAsInstructor = async (payload: IApplyAsInstructorPayload) => {
          },
       });
 
-      return result;
+      return createdUser;
    });
 
-   return instructorApplication;
+   // Generate OTP
+   const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+   const redisKey = `instructor-application-otp:${email}`;
+
+   await redisClient.set(
+      redisKey,
+      JSON.stringify({
+         otp,
+         email,
+         temporaryPassword,
+         userId: instructorApplication.id,
+      }),
+      {
+         EX: 60 * 60,
+      },
+   );
+
+   // Render email template
+   const templatePath = process.cwd() + "/src/app/templates/registration-user-otp.ejs";
+
+   const emailTemplate = await ejs.renderFile(templatePath, {
+      name: user.name,
+      otp,
+   });
+
+   // Send verification email
+   await transporter.sendMail({
+      from: config.email_sender,
+      to: email,
+      subject: "Instructor Application Email Verification",
+      html: emailTemplate,
+   });
+
+   return {
+      id: instructorApplication.id,
+      instructorId: instructorApplication.instructor?.instructorId,
+      name: instructorApplication.name,
+      email: instructorApplication.email,
+      resumeUrl: instructorApplication.instructor?.resumeUrl,
+      verificationStatus: (
+         instructorApplication.instructor as { verificationStatus?: string } | null
+      )?.verificationStatus,
+      message:
+         "Application submitted successfully. Please verify your email using the OTP sent to your email address.",
+   };
+};
+
+const verifyInstructorEmail = async (email: string, otp: string) => {
+   const normalizedEmail = email.toLowerCase().trim();
+
+   const user = await prisma.user.findUnique({
+      where: {
+         email: normalizedEmail,
+      },
+      include: {
+         instructor: true,
+      },
+   });
+
+   if (!user) {
+      throw new AppError(httpStatus.NOT_FOUND, "Instructor application not found");
+   }
+
+   if (user.role !== Role.INSTRUCTOR) {
+      throw new AppError(httpStatus.BAD_REQUEST, "This email is not registered as an instructor");
+   }
+
+   if (!user.instructor) {
+      throw new AppError(httpStatus.NOT_FOUND, "Instructor profile not found");
+   }
+
+   if (user.emailVerified) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Email is already verified");
+   }
+
+   const redisKey = `instructor-application-otp:${normalizedEmail}`;
+
+   const storedData = await redisClient.get(redisKey);
+
+   if (!storedData) {
+      throw new AppError(httpStatus.BAD_REQUEST, "OTP has expired or does not exist");
+   }
+
+   const parsedData = JSON.parse(storedData);
+
+   if (parsedData.otp !== otp) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Invalid OTP");
+   }
+
+   const updatedUser = await prisma.user.update({
+      where: {
+         id: user.id,
+      },
+      data: {
+         emailVerified: true,
+      },
+      include: {
+         instructor: true,
+      },
+   });
+
+   await redisClient.del(redisKey);
+
+   return {
+      id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      instructorId: updatedUser.instructor?.instructorId,
+      emailVerified: updatedUser.emailVerified,
+      verificationStatus: (updatedUser.instructor as { verificationStatus?: string } | null)
+         ?.verificationStatus,
+      message:
+         "Email verified successfully. Your instructor application is now waiting for admin approval.",
+   };
 };
 
 const approveInstructor = async (payload: IApproveInstructorPayload, reviewer: RequestUser) => {
-   const { instructorId } = payload;
+   const { instructorId, action, rejectionReason } = payload;
 
-   const existingInstructor = await prisma.instructor.findUnique({
+   const instructor = await prisma.instructor.findUnique({
       where: {
          id: instructorId,
       },
       include: {
          user: true,
+         department: true,
       },
    });
 
-   if (!existingInstructor) {
-      throw new AppError(httpStatus.NOT_FOUND, "Instructor Application Not Found");
+   if (!instructor) {
+      throw new AppError(httpStatus.NOT_FOUND, "Instructor application not found");
    }
 
-   if (existingInstructor.user.isDeleted) {
-      throw new AppError(httpStatus.GONE, "Instructor Application Has Been Deleted");
+   if (instructor.user.isDeleted) {
+      throw new AppError(httpStatus.GONE, "This instructor account has been deleted");
    }
 
-   const updatedInstructor = await prisma.instructor.update({
-      where: {
-         id: instructorId,
-      },
-      data: {
-         // Instructor does not have a verification status.
-         // Approval means the account is active.
-      },
+   if (!instructor.user.emailVerified) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Instructor email is not verified yet");
+   }
+
+   if (instructor.verificationStatus !== "PENDING") {
+      throw new AppError(
+         httpStatus.BAD_REQUEST,
+         "Instructor application has already been reviewed",
+      );
+   }
+
+   if (action === "REJECT" && !rejectionReason) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Rejection reason is required");
+   }
+
+   const updatedInstructor = await prisma.$transaction(async (tx) => {
+      const updated = await tx.instructor.update({
+         where: {
+            id: instructorId,
+         },
+         data: {
+            verificationStatus: action === "APPROVE" ? "APPROVED" : "REJECTED",
+
+            rejectionReason: action === "REJECT" ? rejectionReason : null,
+
+            reviewedBy: reviewer.userId,
+            reviewedAt: new Date(),
+         },
+         include: {
+            user: true,
+            department: true,
+         },
+      });
+
+      await tx.user.update({
+         where: {
+            id: instructor.userId,
+         },
+         data: {
+            status: action === "APPROVE" ? UserStatus.ACTIVE : UserStatus.BLOCKED,
+
+            needPasswordChange: action === "APPROVE",
+         },
+      });
+
+      return updated;
    });
 
-   await prisma.user.update({
-      where: {
-         id: existingInstructor.userId,
-      },
-      data: {
-         status: "ACTIVE",
-         needPasswordChange: false,
-      },
-   });
+   // Send approval/rejection email
+   if (action === "APPROVE") {
+      await transporter.sendMail({
+         from: config.email_sender,
+         to: instructor.email,
+         subject: "Instructor Application Approved",
+         html: `
+				<h2>Congratulations ${instructor.name}</h2>
+				<p>
+					Your instructor application has been approved.
+				</p>
+				<p>
+					You can now log in using your registered email
+					and temporary password.
+				</p>
+				<p>
+					Please change your password after your first login.
+				</p>
+			`,
+      });
+   } else {
+      await transporter.sendMail({
+         from: config.email_sender,
+         to: instructor.email,
+         subject: "Instructor Application Rejected",
+         html: `
+				<h2>Hello ${instructor.name}</h2>
+				<p>
+					Unfortunately, your instructor application has been rejected.
+				</p>
+				<p>
+					<strong>Reason:</strong>
+					${rejectionReason}
+				</p>
+			`,
+      });
+   }
 
-   return updatedInstructor;
+   // return {
+   //    id: updatedInstructor.id,
+   //    instructorId: updatedInstructor.instructorId,
+   //    name: updatedInstructor.name,
+   //    email: updatedInstructor.email,
+   //    verificationStatus: action === "APPROVE" ? "APPROVED" : "REJECTED",
+   //    rejectionReason: action === "REJECT" ? rejectionReason : null,
+   //    reviewedBy: reviewer.userId,
+   // };
+   return {
+      id: updatedInstructor.id,
+      instructorId: updatedInstructor.instructorId,
+      name: updatedInstructor.name,
+      email: updatedInstructor.email,
+      verificationStatus: updatedInstructor.verificationStatus,
+      rejectionReason: updatedInstructor.rejectionReason,
+      reviewedBy: updatedInstructor.reviewedBy,
+      reviewedAt: updatedInstructor.reviewedAt,
+   };
 };
 
 const getAllInstructors = async (query: IQuery) => {
-   const limit = query.limit ? Number(query.limit) : 10;
-   const page = query.page ? Number(query.page) : 1;
-   const skip = (page - 1) * limit;
+   const { searchTerm, page = "1", limit = "10", sortBy = "createdAt", sortOrder = "desc" } = query;
 
-   const sortBy = query.sortBy ? query.sortBy : "createdAt";
-   const sortOrder = query.sortOrder ? query.sortOrder : "desc";
+   const pageNumber = Number(page);
+   const limitNumber = Number(limit);
+   const skip = (pageNumber - 1) * limitNumber;
 
-   const andConditions: InstructorWhereInput[] = [
-      {
-         user: {
-            isDeleted: false,
-         },
+   const andConditions: InstructorWhereInput[] = [];
+
+   andConditions.push({
+      user: {
+         isDeleted: false,
       },
-   ];
+   });
 
-   if (query.searchTerm) {
+   if (searchTerm) {
       andConditions.push({
          OR: [
             {
                name: {
-                  contains: query.searchTerm,
+                  contains: searchTerm,
                   mode: "insensitive",
                },
             },
             {
                email: {
-                  contains: query.searchTerm,
+                  contains: searchTerm,
                   mode: "insensitive",
                },
             },
             {
-               specialization: {
-                  contains: query.searchTerm,
-                  mode: "insensitive",
-               },
-            },
-            {
-               designation: {
-                  contains: query.searchTerm,
+               instructorId: {
+                  contains: searchTerm,
                   mode: "insensitive",
                },
             },
@@ -203,110 +442,117 @@ const getAllInstructors = async (query: IQuery) => {
       });
    }
 
-   if (query.email) {
-      andConditions.push({
-         email: {
-            contains: query.email,
-            mode: "insensitive",
+   const whereConditions: InstructorWhereInput = {
+      AND: andConditions,
+   };
+
+   const [instructors, total] = await Promise.all([
+      prisma.instructor.findMany({
+         where: whereConditions,
+         skip,
+         take: limitNumber,
+
+         orderBy: {
+            [sortBy]: sortOrder,
          },
-      });
-   }
 
-   if (query.specialization) {
-      andConditions.push({
-         specialization: {
-            equals: query.specialization,
-            mode: "insensitive",
-         },
-      });
-   }
-
-   if (query.departmentId) {
-      andConditions.push({
-         departmentId: query.departmentId,
-      });
-   }
-
-   const allInstructors = await prisma.instructor.findMany({
-      where: {
-         AND: andConditions,
-      },
-
-      take: limit,
-      skip,
-
-      orderBy: {
-         [sortBy]: sortOrder,
-      },
-
-      include: {
-         user: {
-            omit: {
-               password: true,
+         include: {
+            user: {
+               select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  imageUrl: true,
+                  emailVerified: true,
+                  status: true,
+               },
+            },
+            department: {
+               select: {
+                  id: true,
+                  name: true,
+                  code: true,
+               },
             },
          },
-         department: true,
-      },
-   });
+      }),
 
-   const totalInstructorCount = await prisma.instructor.count({
-      where: {
-         AND: andConditions,
-      },
-   });
+      prisma.instructor.count({
+         where: whereConditions,
+      }),
+   ]);
 
    return {
-      data: allInstructors,
+      data: instructors,
       meta: {
-         page,
-         limit,
-         total: totalInstructorCount,
-         totalPages: Math.ceil(totalInstructorCount / limit),
+         page: pageNumber,
+         limit: limitNumber,
+         total,
+         totalPages: Math.ceil(total / limitNumber),
       },
    };
 };
 
 const updateInstructorProfile = async (
-   payload: IUpdateInstructorProfilePayload,
    user: RequestUser,
+   payload: IUpdateInstructorProfilePayload,
 ) => {
-   const existingInstructor = await prisma.instructor.findUnique({
+   const instructor = await prisma.instructor.findUnique({
       where: {
          userId: user.userId,
       },
    });
 
-   if (!existingInstructor) {
-      throw new AppError(httpStatus.NOT_FOUND, "Instructor Profile Not Found");
+   if (!instructor) {
+      throw new AppError(httpStatus.NOT_FOUND, "Instructor profile not found");
    }
 
    const updatedInstructor = await prisma.instructor.update({
       where: {
-         id: existingInstructor.id,
+         id: instructor.id,
       },
-      data: payload,
+      data: {
+         ...payload,
+      },
+      include: {
+         department: true,
+      },
    });
 
    return updatedInstructor;
 };
 
 const getSingleInstructorProfile = async (instructorId: string) => {
-   const instructor = await prisma.instructor.findUnique({
+   const instructor = await prisma.instructor.findFirst({
       where: {
-         id: instructorId,
+         instructorId,
+         verificationStatus: "APPROVED",
+         user: {
+            isDeleted: false,
+            status: UserStatus.ACTIVE,
+         },
       },
       include: {
-         department: true,
+         department: {
+            select: {
+               id: true,
+               name: true,
+               code: true,
+            },
+         },
          user: {
-            omit: {
-               password: true,
+            select: {
+               id: true,
+               name: true,
+               email: true,
+               imageUrl: true,
             },
          },
       },
    });
 
    if (!instructor) {
-      throw new AppError(httpStatus.NOT_FOUND, "Instructor Not Found");
+      throw new AppError(httpStatus.NOT_FOUND, "Instructor not found");
    }
 
    return instructor;
@@ -314,6 +560,7 @@ const getSingleInstructorProfile = async (instructorId: string) => {
 
 export const InstructorServices = {
    applyAsInstructor,
+   verifyInstructorEmail,
    approveInstructor,
    getAllInstructors,
    updateInstructorProfile,

@@ -4,8 +4,6 @@ import { Role } from "../../../generated/prisma/enums";
 import config from "../config";
 import { prisma } from "../lib/prisma";
 import { AppError } from "./AppError";
-// import { generateInstructorId } from "../../generateInstructorId";
-// import { generateStudentId } from "../generateStudentId";
 
 export const seedAdmin = async () => {
    try {
@@ -44,14 +42,8 @@ export const seedAdmin = async () => {
          },
       });
 
-      console.log("Admin Created : ", admin);
+      console.log("Admin Created Successfully:", admin.email);
    } catch (error) {
-      console.log("Error Seeding Admin : ", error);
-
-      await prisma.user.delete({
-         where: {
-            email: config.admin_email,
-         },
-      });
+      console.error("Error Seeding Admin:", error);
    }
 };

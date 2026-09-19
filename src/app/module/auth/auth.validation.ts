@@ -1,8 +1,11 @@
 import z from "zod";
 
 const StudentRegistrationZodSchema = z.object({
-   name: z.string("Not A String!!!!!").min(3, "Name must atleast 3 characters long!!!").max(10),
-   email: z.email("Not email!!"),
+   name: z
+      .string("Name Must Be A String")
+      .min(3, "Name must be at least 3 characters long")
+      .max(100, "Name must not exceed 100 characters"),
+   email: z.email("Invalid Email Format"),
    password: z
       .string()
       .min(8, "Password Must Minimum 8 Characters Long.")

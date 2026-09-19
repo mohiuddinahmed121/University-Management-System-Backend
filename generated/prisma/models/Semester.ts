@@ -28,10 +28,12 @@ export type AggregateSemester = {
 
 export type SemesterAvgAggregateOutputType = {
   year: number | null
+  feeAmount: runtime.Decimal | null
 }
 
 export type SemesterSumAggregateOutputType = {
   year: number | null
+  feeAmount: runtime.Decimal | null
 }
 
 export type SemesterMinAggregateOutputType = {
@@ -40,6 +42,7 @@ export type SemesterMinAggregateOutputType = {
   year: number | null
   startDate: Date | null
   endDate: Date | null
+  feeAmount: runtime.Decimal | null
   status: $Enums.SemesterStatus | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -51,6 +54,7 @@ export type SemesterMaxAggregateOutputType = {
   year: number | null
   startDate: Date | null
   endDate: Date | null
+  feeAmount: runtime.Decimal | null
   status: $Enums.SemesterStatus | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -62,6 +66,7 @@ export type SemesterCountAggregateOutputType = {
   year: number
   startDate: number
   endDate: number
+  feeAmount: number
   status: number
   createdAt: number
   updatedAt: number
@@ -71,10 +76,12 @@ export type SemesterCountAggregateOutputType = {
 
 export type SemesterAvgAggregateInputType = {
   year?: true
+  feeAmount?: true
 }
 
 export type SemesterSumAggregateInputType = {
   year?: true
+  feeAmount?: true
 }
 
 export type SemesterMinAggregateInputType = {
@@ -83,6 +90,7 @@ export type SemesterMinAggregateInputType = {
   year?: true
   startDate?: true
   endDate?: true
+  feeAmount?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -94,6 +102,7 @@ export type SemesterMaxAggregateInputType = {
   year?: true
   startDate?: true
   endDate?: true
+  feeAmount?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -105,6 +114,7 @@ export type SemesterCountAggregateInputType = {
   year?: true
   startDate?: true
   endDate?: true
+  feeAmount?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -203,6 +213,7 @@ export type SemesterGroupByOutputType = {
   year: number
   startDate: Date
   endDate: Date
+  feeAmount: runtime.Decimal
   status: $Enums.SemesterStatus
   createdAt: Date
   updatedAt: Date
@@ -237,6 +248,7 @@ export type SemesterWhereInput = {
   year?: Prisma.IntFilter<"Semester"> | number
   startDate?: Prisma.DateTimeFilter<"Semester"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Semester"> | Date | string
+  feeAmount?: Prisma.DecimalFilter<"Semester"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSemesterStatusFilter<"Semester"> | $Enums.SemesterStatus
   createdAt?: Prisma.DateTimeFilter<"Semester"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Semester"> | Date | string
@@ -250,6 +262,7 @@ export type SemesterOrderByWithRelationInput = {
   year?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  feeAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -267,6 +280,7 @@ export type SemesterWhereUniqueInput = Prisma.AtLeast<{
   year?: Prisma.IntFilter<"Semester"> | number
   startDate?: Prisma.DateTimeFilter<"Semester"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Semester"> | Date | string
+  feeAmount?: Prisma.DecimalFilter<"Semester"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSemesterStatusFilter<"Semester"> | $Enums.SemesterStatus
   createdAt?: Prisma.DateTimeFilter<"Semester"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Semester"> | Date | string
@@ -280,6 +294,7 @@ export type SemesterOrderByWithAggregationInput = {
   year?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  feeAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -299,6 +314,7 @@ export type SemesterScalarWhereWithAggregatesInput = {
   year?: Prisma.IntWithAggregatesFilter<"Semester"> | number
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Semester"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"Semester"> | Date | string
+  feeAmount?: Prisma.DecimalWithAggregatesFilter<"Semester"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSemesterStatusWithAggregatesFilter<"Semester"> | $Enums.SemesterStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Semester"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Semester"> | Date | string
@@ -310,6 +326,7 @@ export type SemesterCreateInput = {
   year: number
   startDate: Date | string
   endDate: Date | string
+  feeAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SemesterStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -323,6 +340,7 @@ export type SemesterUncheckedCreateInput = {
   year: number
   startDate: Date | string
   endDate: Date | string
+  feeAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SemesterStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -336,6 +354,7 @@ export type SemesterUpdateInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  feeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSemesterStatusFieldUpdateOperationsInput | $Enums.SemesterStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -349,6 +368,7 @@ export type SemesterUncheckedUpdateInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  feeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSemesterStatusFieldUpdateOperationsInput | $Enums.SemesterStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -362,6 +382,7 @@ export type SemesterCreateManyInput = {
   year: number
   startDate: Date | string
   endDate: Date | string
+  feeAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SemesterStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -373,6 +394,7 @@ export type SemesterUpdateManyMutationInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  feeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSemesterStatusFieldUpdateOperationsInput | $Enums.SemesterStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -384,6 +406,7 @@ export type SemesterUncheckedUpdateManyInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  feeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSemesterStatusFieldUpdateOperationsInput | $Enums.SemesterStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -405,6 +428,7 @@ export type SemesterCountOrderByAggregateInput = {
   year?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  feeAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -412,6 +436,7 @@ export type SemesterCountOrderByAggregateInput = {
 
 export type SemesterAvgOrderByAggregateInput = {
   year?: Prisma.SortOrder
+  feeAmount?: Prisma.SortOrder
 }
 
 export type SemesterMaxOrderByAggregateInput = {
@@ -420,6 +445,7 @@ export type SemesterMaxOrderByAggregateInput = {
   year?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  feeAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -431,6 +457,7 @@ export type SemesterMinOrderByAggregateInput = {
   year?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  feeAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -438,6 +465,7 @@ export type SemesterMinOrderByAggregateInput = {
 
 export type SemesterSumOrderByAggregateInput = {
   year?: Prisma.SortOrder
+  feeAmount?: Prisma.SortOrder
 }
 
 export type SemesterCreateNestedOneWithoutPaymentsInput = {
@@ -478,6 +506,7 @@ export type SemesterCreateWithoutPaymentsInput = {
   year: number
   startDate: Date | string
   endDate: Date | string
+  feeAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SemesterStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -490,6 +519,7 @@ export type SemesterUncheckedCreateWithoutPaymentsInput = {
   year: number
   startDate: Date | string
   endDate: Date | string
+  feeAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SemesterStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -518,6 +548,7 @@ export type SemesterUpdateWithoutPaymentsInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  feeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSemesterStatusFieldUpdateOperationsInput | $Enums.SemesterStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -530,6 +561,7 @@ export type SemesterUncheckedUpdateWithoutPaymentsInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  feeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSemesterStatusFieldUpdateOperationsInput | $Enums.SemesterStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -542,6 +574,7 @@ export type SemesterCreateWithoutSectionsInput = {
   year: number
   startDate: Date | string
   endDate: Date | string
+  feeAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SemesterStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -554,6 +587,7 @@ export type SemesterUncheckedCreateWithoutSectionsInput = {
   year: number
   startDate: Date | string
   endDate: Date | string
+  feeAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SemesterStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -582,6 +616,7 @@ export type SemesterUpdateWithoutSectionsInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  feeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSemesterStatusFieldUpdateOperationsInput | $Enums.SemesterStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -594,6 +629,7 @@ export type SemesterUncheckedUpdateWithoutSectionsInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  feeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSemesterStatusFieldUpdateOperationsInput | $Enums.SemesterStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -646,6 +682,7 @@ export type SemesterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   year?: boolean
   startDate?: boolean
   endDate?: boolean
+  feeAmount?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -660,6 +697,7 @@ export type SemesterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   year?: boolean
   startDate?: boolean
   endDate?: boolean
+  feeAmount?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -671,6 +709,7 @@ export type SemesterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   year?: boolean
   startDate?: boolean
   endDate?: boolean
+  feeAmount?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -682,12 +721,13 @@ export type SemesterSelectScalar = {
   year?: boolean
   startDate?: boolean
   endDate?: boolean
+  feeAmount?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SemesterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "year" | "startDate" | "endDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["semester"]>
+export type SemesterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "year" | "startDate" | "endDate" | "feeAmount" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["semester"]>
 export type SemesterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sections?: boolean | Prisma.Semester$sectionsArgs<ExtArgs>
   payments?: boolean | Prisma.Semester$paymentsArgs<ExtArgs>
@@ -708,6 +748,7 @@ export type $SemesterPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     year: number
     startDate: Date
     endDate: Date
+    feeAmount: runtime.Decimal
     status: $Enums.SemesterStatus
     createdAt: Date
     updatedAt: Date
@@ -1141,6 +1182,7 @@ export interface SemesterFieldRefs {
   readonly year: Prisma.FieldRef<"Semester", 'Int'>
   readonly startDate: Prisma.FieldRef<"Semester", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Semester", 'DateTime'>
+  readonly feeAmount: Prisma.FieldRef<"Semester", 'Decimal'>
   readonly status: Prisma.FieldRef<"Semester", 'SemesterStatus'>
   readonly createdAt: Prisma.FieldRef<"Semester", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Semester", 'DateTime'>

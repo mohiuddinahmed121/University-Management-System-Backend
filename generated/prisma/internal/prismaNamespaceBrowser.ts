@@ -131,6 +131,10 @@ export const InstructorScalarFieldEnum = {
   designation: 'designation',
   resumeUrl: 'resumeUrl',
   resumePublicId: 'resumePublicId',
+  verificationStatus: 'verificationStatus',
+  rejectionReason: 'rejectionReason',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
   userId: 'userId',
   departmentId: 'departmentId',
   createdAt: 'createdAt',
@@ -222,6 +226,7 @@ export const SemesterScalarFieldEnum = {
   year: 'year',
   startDate: 'startDate',
   endDate: 'endDate',
+  feeAmount: 'feeAmount',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

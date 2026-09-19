@@ -4,6 +4,7 @@ model Semester {
   year      Int
   startDate DateTime
   endDate   DateTime
+  feeAmount Decimal        @db.Decimal(10, 2)
   status    SemesterStatus @default(UPCOMING)
 
   sections Section[]

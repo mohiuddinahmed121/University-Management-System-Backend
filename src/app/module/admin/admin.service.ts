@@ -9,89 +9,89 @@ import { RequestUser } from "../../middleware/checkAuth";
 import { AppError } from "../../utils/AppError";
 import { generateInstructorId } from "../../utils/generateId";
 
-const createInstructor = async (payload: {
-   name: string;
-   email: string;
-   password: string;
-   contactNumber?: string;
-   address?: string;
-   specialization?: string;
-   designation?: string;
-   departmentId: string;
-}) => {
-   const {
-      name,
-      email,
-      password,
-      contactNumber,
-      address,
-      specialization,
-      designation,
-      departmentId,
-   } = payload;
+// const createInstructor = async (payload: {
+//    name: string;
+//    email: string;
+//    password: string;
+//    contactNumber?: string;
+//    address?: string;
+//    specialization?: string;
+//    designation?: string;
+//    departmentId: string;
+// }) => {
+//    const {
+//       name,
+//       email,
+//       password,
+//       contactNumber,
+//       address,
+//       specialization,
+//       designation,
+//       departmentId,
+//    } = payload;
 
-   const normalizedEmail = email.toLowerCase();
+//    const normalizedEmail = email.toLowerCase();
 
-   const existingUser = await prisma.user.findUnique({
-      where: {
-         email: normalizedEmail,
-      },
-   });
+//    const existingUser = await prisma.user.findUnique({
+//       where: {
+//          email: normalizedEmail,
+//       },
+//    });
 
-   if (existingUser) {
-      throw new AppError(httpStatus.CONFLICT, "User With This Email Already Exists");
-   }
+//    if (existingUser) {
+//       throw new AppError(httpStatus.CONFLICT, "User With This Email Already Exists");
+//    }
 
-   const department = await prisma.department.findUnique({
-      where: {
-         id: departmentId,
-      },
-   });
+//    const department = await prisma.department.findUnique({
+//       where: {
+//          id: departmentId,
+//       },
+//    });
 
-   if (!department || department.isDeleted) {
-      throw new AppError(httpStatus.NOT_FOUND, "Department Not Found");
-   }
+//    if (!department || department.isDeleted) {
+//       throw new AppError(httpStatus.NOT_FOUND, "Department Not Found");
+//    }
 
-   const instructorId = await generateInstructorId();
+//    const instructorId = await generateInstructorId();
 
-   const hashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds));
+//    const hashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds));
 
-   const instructor = await prisma.user.create({
-      data: {
-         name,
-         email: normalizedEmail,
-         password: hashedPassword,
-         role: Role.INSTRUCTOR,
-         authProvider: "CREDENTIAL",
-         emailVerified: true,
-         needPasswordChange: false,
+//    const instructor = await prisma.user.create({
+//       data: {
+//          name,
+//          email: normalizedEmail,
+//          password: hashedPassword,
+//          role: Role.INSTRUCTOR,
+//          authProvider: "CREDENTIAL",
+//          emailVerified: true,
+//          needPasswordChange: false,
 
-         instructor: {
-            create: {
-               instructorId,
-               name,
-               email: normalizedEmail,
-               contactNumber,
-               address,
-               specialization,
-               designation,
-               departmentId,
-            },
-         },
-      },
-      include: {
-         instructor: {
-            include: {
-               department: true,
-            },
-         },
-      },
-   });
+//          instructor: {
+//             create: {
+//                instructorId,
+//                name,
+//                email: normalizedEmail,
+//                contactNumber,
+//                address,
+//                specialization,
+//                designation,
+//                departmentId,
+//             },
+//          },
+//       },
+//       include: {
+//          instructor: {
+//             include: {
+//                department: true,
+//             },
+//          },
+//       },
+//    });
 
-   const { password: _, ...result } = instructor;
+//    const { password: _, ...result } = instructor;
 
-   return result;
-};
+//    return result;
+// };
 
 const getAllUsers = async (query: IQuery) => {
    const limit = query.limit ? Number(query.limit) : 10;
@@ -290,7 +290,7 @@ const getSingleUser = async (userId: string) => {
 };
 
 export const AdminServices = {
-   createInstructor,
+   //createInstructor,
    getAllUsers,
    updateUserStatus,
    getSingleUser,

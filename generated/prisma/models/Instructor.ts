@@ -35,6 +35,10 @@ export type InstructorMinAggregateOutputType = {
   designation: string | null
   resumeUrl: string | null
   resumePublicId: string | null
+  verificationStatus: $Enums.InstructorVerificationStatus | null
+  rejectionReason: string | null
+  reviewedBy: string | null
+  reviewedAt: Date | null
   userId: string | null
   departmentId: string | null
   createdAt: Date | null
@@ -52,6 +56,10 @@ export type InstructorMaxAggregateOutputType = {
   designation: string | null
   resumeUrl: string | null
   resumePublicId: string | null
+  verificationStatus: $Enums.InstructorVerificationStatus | null
+  rejectionReason: string | null
+  reviewedBy: string | null
+  reviewedAt: Date | null
   userId: string | null
   departmentId: string | null
   createdAt: Date | null
@@ -69,6 +77,10 @@ export type InstructorCountAggregateOutputType = {
   designation: number
   resumeUrl: number
   resumePublicId: number
+  verificationStatus: number
+  rejectionReason: number
+  reviewedBy: number
+  reviewedAt: number
   userId: number
   departmentId: number
   createdAt: number
@@ -88,6 +100,10 @@ export type InstructorMinAggregateInputType = {
   designation?: true
   resumeUrl?: true
   resumePublicId?: true
+  verificationStatus?: true
+  rejectionReason?: true
+  reviewedBy?: true
+  reviewedAt?: true
   userId?: true
   departmentId?: true
   createdAt?: true
@@ -105,6 +121,10 @@ export type InstructorMaxAggregateInputType = {
   designation?: true
   resumeUrl?: true
   resumePublicId?: true
+  verificationStatus?: true
+  rejectionReason?: true
+  reviewedBy?: true
+  reviewedAt?: true
   userId?: true
   departmentId?: true
   createdAt?: true
@@ -122,6 +142,10 @@ export type InstructorCountAggregateInputType = {
   designation?: true
   resumeUrl?: true
   resumePublicId?: true
+  verificationStatus?: true
+  rejectionReason?: true
+  reviewedBy?: true
+  reviewedAt?: true
   userId?: true
   departmentId?: true
   createdAt?: true
@@ -212,6 +236,10 @@ export type InstructorGroupByOutputType = {
   designation: string | null
   resumeUrl: string | null
   resumePublicId: string | null
+  verificationStatus: $Enums.InstructorVerificationStatus
+  rejectionReason: string | null
+  reviewedBy: string | null
+  reviewedAt: Date | null
   userId: string
   departmentId: string
   createdAt: Date
@@ -250,10 +278,15 @@ export type InstructorWhereInput = {
   designation?: Prisma.StringNullableFilter<"Instructor"> | string | null
   resumeUrl?: Prisma.StringNullableFilter<"Instructor"> | string | null
   resumePublicId?: Prisma.StringNullableFilter<"Instructor"> | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFilter<"Instructor"> | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.StringNullableFilter<"Instructor"> | string | null
+  reviewedBy?: Prisma.StringNullableFilter<"Instructor"> | string | null
+  reviewedAt?: Prisma.DateTimeNullableFilter<"Instructor"> | Date | string | null
   userId?: Prisma.StringFilter<"Instructor"> | string
   departmentId?: Prisma.StringFilter<"Instructor"> | string
   createdAt?: Prisma.DateTimeFilter<"Instructor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Instructor"> | Date | string
+  reviewer?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   sections?: Prisma.SectionListRelationFilter
@@ -270,10 +303,15 @@ export type InstructorOrderByWithRelationInput = {
   designation?: Prisma.SortOrderInput | Prisma.SortOrder
   resumeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   resumePublicId?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  reviewer?: Prisma.UserOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   department?: Prisma.DepartmentOrderByWithRelationInput
   sections?: Prisma.SectionOrderByRelationAggregateInput
@@ -294,9 +332,14 @@ export type InstructorWhereUniqueInput = Prisma.AtLeast<{
   designation?: Prisma.StringNullableFilter<"Instructor"> | string | null
   resumeUrl?: Prisma.StringNullableFilter<"Instructor"> | string | null
   resumePublicId?: Prisma.StringNullableFilter<"Instructor"> | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFilter<"Instructor"> | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.StringNullableFilter<"Instructor"> | string | null
+  reviewedBy?: Prisma.StringNullableFilter<"Instructor"> | string | null
+  reviewedAt?: Prisma.DateTimeNullableFilter<"Instructor"> | Date | string | null
   departmentId?: Prisma.StringFilter<"Instructor"> | string
   createdAt?: Prisma.DateTimeFilter<"Instructor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Instructor"> | Date | string
+  reviewer?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   sections?: Prisma.SectionListRelationFilter
@@ -313,6 +356,10 @@ export type InstructorOrderByWithAggregationInput = {
   designation?: Prisma.SortOrderInput | Prisma.SortOrder
   resumeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   resumePublicId?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -336,6 +383,10 @@ export type InstructorScalarWhereWithAggregatesInput = {
   designation?: Prisma.StringNullableWithAggregatesFilter<"Instructor"> | string | null
   resumeUrl?: Prisma.StringNullableWithAggregatesFilter<"Instructor"> | string | null
   resumePublicId?: Prisma.StringNullableWithAggregatesFilter<"Instructor"> | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusWithAggregatesFilter<"Instructor"> | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.StringNullableWithAggregatesFilter<"Instructor"> | string | null
+  reviewedBy?: Prisma.StringNullableWithAggregatesFilter<"Instructor"> | string | null
+  reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Instructor"> | Date | string | null
   userId?: Prisma.StringWithAggregatesFilter<"Instructor"> | string
   departmentId?: Prisma.StringWithAggregatesFilter<"Instructor"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Instructor"> | Date | string
@@ -353,8 +404,12 @@ export type InstructorCreateInput = {
   designation?: string | null
   resumeUrl?: string | null
   resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviewer?: Prisma.UserCreateNestedOneWithoutReviewedInstructorsInput
   user: Prisma.UserCreateNestedOneWithoutInstructorInput
   department: Prisma.DepartmentCreateNestedOneWithoutInstructorsInput
   sections?: Prisma.SectionCreateNestedManyWithoutInstructorInput
@@ -371,6 +426,10 @@ export type InstructorUncheckedCreateInput = {
   designation?: string | null
   resumeUrl?: string | null
   resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
   userId: string
   departmentId: string
   createdAt?: Date | string
@@ -389,8 +448,12 @@ export type InstructorUpdateInput = {
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewer?: Prisma.UserUpdateOneWithoutReviewedInstructorsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutInstructorNestedInput
   department?: Prisma.DepartmentUpdateOneRequiredWithoutInstructorsNestedInput
   sections?: Prisma.SectionUpdateManyWithoutInstructorNestedInput
@@ -407,6 +470,10 @@ export type InstructorUncheckedUpdateInput = {
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -425,6 +492,10 @@ export type InstructorCreateManyInput = {
   designation?: string | null
   resumeUrl?: string | null
   resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
   userId: string
   departmentId: string
   createdAt?: Date | string
@@ -442,6 +513,9 @@ export type InstructorUpdateManyMutationInput = {
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -457,6 +531,10 @@ export type InstructorUncheckedUpdateManyInput = {
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -484,6 +562,10 @@ export type InstructorCountOrderByAggregateInput = {
   designation?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrder
   resumePublicId?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -501,6 +583,10 @@ export type InstructorMaxOrderByAggregateInput = {
   designation?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrder
   resumePublicId?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -518,6 +604,10 @@ export type InstructorMinOrderByAggregateInput = {
   designation?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrder
   resumePublicId?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -571,6 +661,10 @@ export type InstructorUncheckedUpdateManyWithoutDepartmentNestedInput = {
   deleteMany?: Prisma.InstructorScalarWhereInput | Prisma.InstructorScalarWhereInput[]
 }
 
+export type EnumInstructorVerificationStatusFieldUpdateOperationsInput = {
+  set?: $Enums.InstructorVerificationStatus
+}
+
 export type InstructorCreateNestedOneWithoutSectionsInput = {
   create?: Prisma.XOR<Prisma.InstructorCreateWithoutSectionsInput, Prisma.InstructorUncheckedCreateWithoutSectionsInput>
   connectOrCreate?: Prisma.InstructorCreateOrConnectWithoutSectionsInput
@@ -593,10 +687,24 @@ export type InstructorCreateNestedOneWithoutUserInput = {
   connect?: Prisma.InstructorWhereUniqueInput
 }
 
+export type InstructorCreateNestedManyWithoutReviewerInput = {
+  create?: Prisma.XOR<Prisma.InstructorCreateWithoutReviewerInput, Prisma.InstructorUncheckedCreateWithoutReviewerInput> | Prisma.InstructorCreateWithoutReviewerInput[] | Prisma.InstructorUncheckedCreateWithoutReviewerInput[]
+  connectOrCreate?: Prisma.InstructorCreateOrConnectWithoutReviewerInput | Prisma.InstructorCreateOrConnectWithoutReviewerInput[]
+  createMany?: Prisma.InstructorCreateManyReviewerInputEnvelope
+  connect?: Prisma.InstructorWhereUniqueInput | Prisma.InstructorWhereUniqueInput[]
+}
+
 export type InstructorUncheckedCreateNestedOneWithoutUserInput = {
   create?: Prisma.XOR<Prisma.InstructorCreateWithoutUserInput, Prisma.InstructorUncheckedCreateWithoutUserInput>
   connectOrCreate?: Prisma.InstructorCreateOrConnectWithoutUserInput
   connect?: Prisma.InstructorWhereUniqueInput
+}
+
+export type InstructorUncheckedCreateNestedManyWithoutReviewerInput = {
+  create?: Prisma.XOR<Prisma.InstructorCreateWithoutReviewerInput, Prisma.InstructorUncheckedCreateWithoutReviewerInput> | Prisma.InstructorCreateWithoutReviewerInput[] | Prisma.InstructorUncheckedCreateWithoutReviewerInput[]
+  connectOrCreate?: Prisma.InstructorCreateOrConnectWithoutReviewerInput | Prisma.InstructorCreateOrConnectWithoutReviewerInput[]
+  createMany?: Prisma.InstructorCreateManyReviewerInputEnvelope
+  connect?: Prisma.InstructorWhereUniqueInput | Prisma.InstructorWhereUniqueInput[]
 }
 
 export type InstructorUpdateOneWithoutUserNestedInput = {
@@ -609,6 +717,20 @@ export type InstructorUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InstructorUpdateToOneWithWhereWithoutUserInput, Prisma.InstructorUpdateWithoutUserInput>, Prisma.InstructorUncheckedUpdateWithoutUserInput>
 }
 
+export type InstructorUpdateManyWithoutReviewerNestedInput = {
+  create?: Prisma.XOR<Prisma.InstructorCreateWithoutReviewerInput, Prisma.InstructorUncheckedCreateWithoutReviewerInput> | Prisma.InstructorCreateWithoutReviewerInput[] | Prisma.InstructorUncheckedCreateWithoutReviewerInput[]
+  connectOrCreate?: Prisma.InstructorCreateOrConnectWithoutReviewerInput | Prisma.InstructorCreateOrConnectWithoutReviewerInput[]
+  upsert?: Prisma.InstructorUpsertWithWhereUniqueWithoutReviewerInput | Prisma.InstructorUpsertWithWhereUniqueWithoutReviewerInput[]
+  createMany?: Prisma.InstructorCreateManyReviewerInputEnvelope
+  set?: Prisma.InstructorWhereUniqueInput | Prisma.InstructorWhereUniqueInput[]
+  disconnect?: Prisma.InstructorWhereUniqueInput | Prisma.InstructorWhereUniqueInput[]
+  delete?: Prisma.InstructorWhereUniqueInput | Prisma.InstructorWhereUniqueInput[]
+  connect?: Prisma.InstructorWhereUniqueInput | Prisma.InstructorWhereUniqueInput[]
+  update?: Prisma.InstructorUpdateWithWhereUniqueWithoutReviewerInput | Prisma.InstructorUpdateWithWhereUniqueWithoutReviewerInput[]
+  updateMany?: Prisma.InstructorUpdateManyWithWhereWithoutReviewerInput | Prisma.InstructorUpdateManyWithWhereWithoutReviewerInput[]
+  deleteMany?: Prisma.InstructorScalarWhereInput | Prisma.InstructorScalarWhereInput[]
+}
+
 export type InstructorUncheckedUpdateOneWithoutUserNestedInput = {
   create?: Prisma.XOR<Prisma.InstructorCreateWithoutUserInput, Prisma.InstructorUncheckedCreateWithoutUserInput>
   connectOrCreate?: Prisma.InstructorCreateOrConnectWithoutUserInput
@@ -617,6 +739,20 @@ export type InstructorUncheckedUpdateOneWithoutUserNestedInput = {
   delete?: Prisma.InstructorWhereInput | boolean
   connect?: Prisma.InstructorWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.InstructorUpdateToOneWithWhereWithoutUserInput, Prisma.InstructorUpdateWithoutUserInput>, Prisma.InstructorUncheckedUpdateWithoutUserInput>
+}
+
+export type InstructorUncheckedUpdateManyWithoutReviewerNestedInput = {
+  create?: Prisma.XOR<Prisma.InstructorCreateWithoutReviewerInput, Prisma.InstructorUncheckedCreateWithoutReviewerInput> | Prisma.InstructorCreateWithoutReviewerInput[] | Prisma.InstructorUncheckedCreateWithoutReviewerInput[]
+  connectOrCreate?: Prisma.InstructorCreateOrConnectWithoutReviewerInput | Prisma.InstructorCreateOrConnectWithoutReviewerInput[]
+  upsert?: Prisma.InstructorUpsertWithWhereUniqueWithoutReviewerInput | Prisma.InstructorUpsertWithWhereUniqueWithoutReviewerInput[]
+  createMany?: Prisma.InstructorCreateManyReviewerInputEnvelope
+  set?: Prisma.InstructorWhereUniqueInput | Prisma.InstructorWhereUniqueInput[]
+  disconnect?: Prisma.InstructorWhereUniqueInput | Prisma.InstructorWhereUniqueInput[]
+  delete?: Prisma.InstructorWhereUniqueInput | Prisma.InstructorWhereUniqueInput[]
+  connect?: Prisma.InstructorWhereUniqueInput | Prisma.InstructorWhereUniqueInput[]
+  update?: Prisma.InstructorUpdateWithWhereUniqueWithoutReviewerInput | Prisma.InstructorUpdateWithWhereUniqueWithoutReviewerInput[]
+  updateMany?: Prisma.InstructorUpdateManyWithWhereWithoutReviewerInput | Prisma.InstructorUpdateManyWithWhereWithoutReviewerInput[]
+  deleteMany?: Prisma.InstructorScalarWhereInput | Prisma.InstructorScalarWhereInput[]
 }
 
 export type InstructorCreateWithoutDepartmentInput = {
@@ -630,8 +766,12 @@ export type InstructorCreateWithoutDepartmentInput = {
   designation?: string | null
   resumeUrl?: string | null
   resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviewer?: Prisma.UserCreateNestedOneWithoutReviewedInstructorsInput
   user: Prisma.UserCreateNestedOneWithoutInstructorInput
   sections?: Prisma.SectionCreateNestedManyWithoutInstructorInput
 }
@@ -647,6 +787,10 @@ export type InstructorUncheckedCreateWithoutDepartmentInput = {
   designation?: string | null
   resumeUrl?: string | null
   resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -693,6 +837,10 @@ export type InstructorScalarWhereInput = {
   designation?: Prisma.StringNullableFilter<"Instructor"> | string | null
   resumeUrl?: Prisma.StringNullableFilter<"Instructor"> | string | null
   resumePublicId?: Prisma.StringNullableFilter<"Instructor"> | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFilter<"Instructor"> | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.StringNullableFilter<"Instructor"> | string | null
+  reviewedBy?: Prisma.StringNullableFilter<"Instructor"> | string | null
+  reviewedAt?: Prisma.DateTimeNullableFilter<"Instructor"> | Date | string | null
   userId?: Prisma.StringFilter<"Instructor"> | string
   departmentId?: Prisma.StringFilter<"Instructor"> | string
   createdAt?: Prisma.DateTimeFilter<"Instructor"> | Date | string
@@ -710,8 +858,12 @@ export type InstructorCreateWithoutSectionsInput = {
   designation?: string | null
   resumeUrl?: string | null
   resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviewer?: Prisma.UserCreateNestedOneWithoutReviewedInstructorsInput
   user: Prisma.UserCreateNestedOneWithoutInstructorInput
   department: Prisma.DepartmentCreateNestedOneWithoutInstructorsInput
 }
@@ -727,6 +879,10 @@ export type InstructorUncheckedCreateWithoutSectionsInput = {
   designation?: string | null
   resumeUrl?: string | null
   resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
   userId: string
   departmentId: string
   createdAt?: Date | string
@@ -760,8 +916,12 @@ export type InstructorUpdateWithoutSectionsInput = {
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewer?: Prisma.UserUpdateOneWithoutReviewedInstructorsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutInstructorNestedInput
   department?: Prisma.DepartmentUpdateOneRequiredWithoutInstructorsNestedInput
 }
@@ -777,6 +937,10 @@ export type InstructorUncheckedUpdateWithoutSectionsInput = {
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -794,8 +958,12 @@ export type InstructorCreateWithoutUserInput = {
   designation?: string | null
   resumeUrl?: string | null
   resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviewer?: Prisma.UserCreateNestedOneWithoutReviewedInstructorsInput
   department: Prisma.DepartmentCreateNestedOneWithoutInstructorsInput
   sections?: Prisma.SectionCreateNestedManyWithoutInstructorInput
 }
@@ -811,6 +979,10 @@ export type InstructorUncheckedCreateWithoutUserInput = {
   designation?: string | null
   resumeUrl?: string | null
   resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
   departmentId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -820,6 +992,58 @@ export type InstructorUncheckedCreateWithoutUserInput = {
 export type InstructorCreateOrConnectWithoutUserInput = {
   where: Prisma.InstructorWhereUniqueInput
   create: Prisma.XOR<Prisma.InstructorCreateWithoutUserInput, Prisma.InstructorUncheckedCreateWithoutUserInput>
+}
+
+export type InstructorCreateWithoutReviewerInput = {
+  id?: string
+  instructorId: string
+  name: string
+  email: string
+  contactNumber?: string | null
+  address?: string | null
+  specialization?: string | null
+  designation?: string | null
+  resumeUrl?: string | null
+  resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutInstructorInput
+  department: Prisma.DepartmentCreateNestedOneWithoutInstructorsInput
+  sections?: Prisma.SectionCreateNestedManyWithoutInstructorInput
+}
+
+export type InstructorUncheckedCreateWithoutReviewerInput = {
+  id?: string
+  instructorId: string
+  name: string
+  email: string
+  contactNumber?: string | null
+  address?: string | null
+  specialization?: string | null
+  designation?: string | null
+  resumeUrl?: string | null
+  resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedAt?: Date | string | null
+  userId: string
+  departmentId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sections?: Prisma.SectionUncheckedCreateNestedManyWithoutInstructorInput
+}
+
+export type InstructorCreateOrConnectWithoutReviewerInput = {
+  where: Prisma.InstructorWhereUniqueInput
+  create: Prisma.XOR<Prisma.InstructorCreateWithoutReviewerInput, Prisma.InstructorUncheckedCreateWithoutReviewerInput>
+}
+
+export type InstructorCreateManyReviewerInputEnvelope = {
+  data: Prisma.InstructorCreateManyReviewerInput | Prisma.InstructorCreateManyReviewerInput[]
+  skipDuplicates?: boolean
 }
 
 export type InstructorUpsertWithoutUserInput = {
@@ -844,8 +1068,12 @@ export type InstructorUpdateWithoutUserInput = {
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewer?: Prisma.UserUpdateOneWithoutReviewedInstructorsNestedInput
   department?: Prisma.DepartmentUpdateOneRequiredWithoutInstructorsNestedInput
   sections?: Prisma.SectionUpdateManyWithoutInstructorNestedInput
 }
@@ -861,10 +1089,30 @@ export type InstructorUncheckedUpdateWithoutUserInput = {
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sections?: Prisma.SectionUncheckedUpdateManyWithoutInstructorNestedInput
+}
+
+export type InstructorUpsertWithWhereUniqueWithoutReviewerInput = {
+  where: Prisma.InstructorWhereUniqueInput
+  update: Prisma.XOR<Prisma.InstructorUpdateWithoutReviewerInput, Prisma.InstructorUncheckedUpdateWithoutReviewerInput>
+  create: Prisma.XOR<Prisma.InstructorCreateWithoutReviewerInput, Prisma.InstructorUncheckedCreateWithoutReviewerInput>
+}
+
+export type InstructorUpdateWithWhereUniqueWithoutReviewerInput = {
+  where: Prisma.InstructorWhereUniqueInput
+  data: Prisma.XOR<Prisma.InstructorUpdateWithoutReviewerInput, Prisma.InstructorUncheckedUpdateWithoutReviewerInput>
+}
+
+export type InstructorUpdateManyWithWhereWithoutReviewerInput = {
+  where: Prisma.InstructorScalarWhereInput
+  data: Prisma.XOR<Prisma.InstructorUpdateManyMutationInput, Prisma.InstructorUncheckedUpdateManyWithoutReviewerInput>
 }
 
 export type InstructorCreateManyDepartmentInput = {
@@ -878,6 +1126,10 @@ export type InstructorCreateManyDepartmentInput = {
   designation?: string | null
   resumeUrl?: string | null
   resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -894,8 +1146,12 @@ export type InstructorUpdateWithoutDepartmentInput = {
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewer?: Prisma.UserUpdateOneWithoutReviewedInstructorsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutInstructorNestedInput
   sections?: Prisma.SectionUpdateManyWithoutInstructorNestedInput
 }
@@ -911,6 +1167,10 @@ export type InstructorUncheckedUpdateWithoutDepartmentInput = {
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -928,7 +1188,93 @@ export type InstructorUncheckedUpdateManyWithoutDepartmentInput = {
   designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type InstructorCreateManyReviewerInput = {
+  id?: string
+  instructorId: string
+  name: string
+  email: string
+  contactNumber?: string | null
+  address?: string | null
+  specialization?: string | null
+  designation?: string | null
+  resumeUrl?: string | null
+  resumePublicId?: string | null
+  verificationStatus?: $Enums.InstructorVerificationStatus
+  rejectionReason?: string | null
+  reviewedAt?: Date | string | null
+  userId: string
+  departmentId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type InstructorUpdateWithoutReviewerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instructorId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutInstructorNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutInstructorsNestedInput
+  sections?: Prisma.SectionUpdateManyWithoutInstructorNestedInput
+}
+
+export type InstructorUncheckedUpdateWithoutReviewerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instructorId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sections?: Prisma.SectionUncheckedUpdateManyWithoutInstructorNestedInput
+}
+
+export type InstructorUncheckedUpdateManyWithoutReviewerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instructorId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumePublicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstructorVerificationStatusFieldUpdateOperationsInput | $Enums.InstructorVerificationStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -975,10 +1321,15 @@ export type InstructorSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   designation?: boolean
   resumeUrl?: boolean
   resumePublicId?: boolean
+  verificationStatus?: boolean
+  rejectionReason?: boolean
+  reviewedBy?: boolean
+  reviewedAt?: boolean
   userId?: boolean
   departmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  reviewer?: boolean | Prisma.Instructor$reviewerArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   sections?: boolean | Prisma.Instructor$sectionsArgs<ExtArgs>
@@ -996,10 +1347,15 @@ export type InstructorSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   designation?: boolean
   resumeUrl?: boolean
   resumePublicId?: boolean
+  verificationStatus?: boolean
+  rejectionReason?: boolean
+  reviewedBy?: boolean
+  reviewedAt?: boolean
   userId?: boolean
   departmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  reviewer?: boolean | Prisma.Instructor$reviewerArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["instructor"]>
@@ -1015,10 +1371,15 @@ export type InstructorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   designation?: boolean
   resumeUrl?: boolean
   resumePublicId?: boolean
+  verificationStatus?: boolean
+  rejectionReason?: boolean
+  reviewedBy?: boolean
+  reviewedAt?: boolean
   userId?: boolean
   departmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  reviewer?: boolean | Prisma.Instructor$reviewerArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["instructor"]>
@@ -1034,24 +1395,31 @@ export type InstructorSelectScalar = {
   designation?: boolean
   resumeUrl?: boolean
   resumePublicId?: boolean
+  verificationStatus?: boolean
+  rejectionReason?: boolean
+  reviewedBy?: boolean
+  reviewedAt?: boolean
   userId?: boolean
   departmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type InstructorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "instructorId" | "name" | "email" | "contactNumber" | "address" | "specialization" | "designation" | "resumeUrl" | "resumePublicId" | "userId" | "departmentId" | "createdAt" | "updatedAt", ExtArgs["result"]["instructor"]>
+export type InstructorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "instructorId" | "name" | "email" | "contactNumber" | "address" | "specialization" | "designation" | "resumeUrl" | "resumePublicId" | "verificationStatus" | "rejectionReason" | "reviewedBy" | "reviewedAt" | "userId" | "departmentId" | "createdAt" | "updatedAt", ExtArgs["result"]["instructor"]>
 export type InstructorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  reviewer?: boolean | Prisma.Instructor$reviewerArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   sections?: boolean | Prisma.Instructor$sectionsArgs<ExtArgs>
   _count?: boolean | Prisma.InstructorCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InstructorIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  reviewer?: boolean | Prisma.Instructor$reviewerArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }
 export type InstructorIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  reviewer?: boolean | Prisma.Instructor$reviewerArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }
@@ -1059,6 +1427,7 @@ export type InstructorIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 export type $InstructorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Instructor"
   objects: {
+    reviewer: Prisma.$UserPayload<ExtArgs> | null
     user: Prisma.$UserPayload<ExtArgs>
     department: Prisma.$DepartmentPayload<ExtArgs>
     sections: Prisma.$SectionPayload<ExtArgs>[]
@@ -1074,6 +1443,10 @@ export type $InstructorPayload<ExtArgs extends runtime.Types.Extensions.Internal
     designation: string | null
     resumeUrl: string | null
     resumePublicId: string | null
+    verificationStatus: $Enums.InstructorVerificationStatus
+    rejectionReason: string | null
+    reviewedBy: string | null
+    reviewedAt: Date | null
     userId: string
     departmentId: string
     createdAt: Date
@@ -1472,6 +1845,7 @@ readonly fields: InstructorFieldRefs;
  */
 export interface Prisma__InstructorClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  reviewer<T extends Prisma.Instructor$reviewerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Instructor$reviewerArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sections<T extends Prisma.Instructor$sectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Instructor$sectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1514,6 +1888,10 @@ export interface InstructorFieldRefs {
   readonly designation: Prisma.FieldRef<"Instructor", 'String'>
   readonly resumeUrl: Prisma.FieldRef<"Instructor", 'String'>
   readonly resumePublicId: Prisma.FieldRef<"Instructor", 'String'>
+  readonly verificationStatus: Prisma.FieldRef<"Instructor", 'InstructorVerificationStatus'>
+  readonly rejectionReason: Prisma.FieldRef<"Instructor", 'String'>
+  readonly reviewedBy: Prisma.FieldRef<"Instructor", 'String'>
+  readonly reviewedAt: Prisma.FieldRef<"Instructor", 'DateTime'>
   readonly userId: Prisma.FieldRef<"Instructor", 'String'>
   readonly departmentId: Prisma.FieldRef<"Instructor", 'String'>
   readonly createdAt: Prisma.FieldRef<"Instructor", 'DateTime'>
@@ -1916,6 +2294,25 @@ export type InstructorDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many Instructors to delete.
    */
   limit?: number
+}
+
+/**
+ * Instructor.reviewer
+ */
+export type Instructor$reviewerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

@@ -45,3 +45,9 @@ enum PaymentStatus {
   FAILED
   CANCELLED
 }
+
+enum InstructorVerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

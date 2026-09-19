@@ -22,6 +22,8 @@ model User {
 
   student    Student?
   instructor Instructor?
+  
+  reviewedInstructors Instructor[] @relation("InstructorApprovals")
 
   @@unique([email])
   @@index([role], name: "idx_user_role")

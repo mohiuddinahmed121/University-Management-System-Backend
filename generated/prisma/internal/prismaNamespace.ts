@@ -1405,6 +1405,10 @@ export const InstructorScalarFieldEnum = {
   designation: 'designation',
   resumeUrl: 'resumeUrl',
   resumePublicId: 'resumePublicId',
+  verificationStatus: 'verificationStatus',
+  rejectionReason: 'rejectionReason',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
   userId: 'userId',
   departmentId: 'departmentId',
   createdAt: 'createdAt',
@@ -1496,6 +1500,7 @@ export const SemesterScalarFieldEnum = {
   year: 'year',
   startDate: 'startDate',
   endDate: 'endDate',
+  feeAmount: 'feeAmount',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1637,6 +1642,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'InstructorVerificationStatus'
+ */
+export type EnumInstructorVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstructorVerificationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'InstructorVerificationStatus[]'
+ */
+export type ListEnumInstructorVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstructorVerificationStatus[]'>
     
 
 

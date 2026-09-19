@@ -19,6 +19,26 @@ const getGrade = (marks: number) => {
    return { grade: "F", gradePoint: 0.0 };
 };
 
+/*
+ * Helper: JWT payload-এ থাকা user.userId আসলে User.id।
+ * কিন্তু Section.instructorId আসলে Instructor.id।
+ * তাই instructor role হলে, প্রথমে User.id দিয়ে
+ * সংশ্লিষ্ট Instructor.id বের করে নিতে হবে।
+ */
+const getInstructorIdFromUser = async (userId: string) => {
+   const instructor = await prisma.instructor.findUnique({
+      where: {
+         userId,
+      },
+   });
+
+   if (!instructor) {
+      throw new AppError(httpStatus.NOT_FOUND, "Instructor Profile Not Found");
+   }
+
+   return instructor.id;
+};
+
 const submitResult = async (payload: ISubmitResultPayload, user: IRequestUser) => {
    const { registrationId, marks } = payload;
 
@@ -47,11 +67,15 @@ const submitResult = async (payload: ISubmitResultPayload, user: IRequestUser) =
       throw new AppError(httpStatus.BAD_REQUEST, "No Instructor Is Assigned To This Section");
    }
 
-   if (user.role === "INSTRUCTOR" && registration.section.instructorId !== user.userId) {
-      throw new AppError(
-         httpStatus.FORBIDDEN,
-         "You Can Only Submit Results For Your Assigned Sections",
-      );
+   if (user.role === "INSTRUCTOR") {
+      const instructorId = await getInstructorIdFromUser(user.userId);
+
+      if (registration.section.instructorId !== instructorId) {
+         throw new AppError(
+            httpStatus.FORBIDDEN,
+            "You Can Only Submit Results For Your Assigned Sections",
+         );
+      }
    }
 
    if (registration.status === "DROPPED") {
@@ -134,14 +158,15 @@ const updateResult = async (
       throw new AppError(httpStatus.NOT_FOUND, "Result Not Found");
    }
 
-   if (
-      user.role === "INSTRUCTOR" &&
-      existingResult.registration.section.instructorId !== user.userId
-   ) {
-      throw new AppError(
-         httpStatus.FORBIDDEN,
-         "You Can Only Update Results For Your Assigned Sections",
-      );
+   if (user.role === "INSTRUCTOR") {
+      const instructorId = await getInstructorIdFromUser(user.userId);
+
+      if (existingResult.registration.section.instructorId !== instructorId) {
+         throw new AppError(
+            httpStatus.FORBIDDEN,
+            "You Can Only Update Results For Your Assigned Sections",
+         );
+      }
    }
 
    const marks = payload.marks;
@@ -354,7 +379,9 @@ const getSingleResult = async (resultId: string, user: IRequestUser) => {
    }
 
    if (user.role === "INSTRUCTOR") {
-      if (result.registration.section.instructorId !== user.userId) {
+      const instructorId = await getInstructorIdFromUser(user.userId);
+
+      if (result.registration.section.instructorId !== instructorId) {
          throw new AppError(
             httpStatus.FORBIDDEN,
             "You Can Only View Results For Your Assigned Sections",
