@@ -32,4 +32,8 @@ const main = async () => {
    }
 };
 
-main();
+if (process.env.NODE_ENV !== "production") {
+   main();
+}
+
+export default app;
